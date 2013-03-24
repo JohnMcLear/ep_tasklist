@@ -1,7 +1,6 @@
 ul.tasklist{
   list-style: none;
-  margin-left: 10px;
-  cursor: cursor;
+  cursor: pointer;
 }
 
 ul.tasklist li, ul.tasklist-done li{
@@ -9,7 +8,6 @@ ul.tasklist li, ul.tasklist-done li{
   background-image: url('/static/plugins/ep_tasklist/static/img/checkbox.png');
   background-repeat: no-repeat;
   padding-left: 1.5em;
-  cursor: text;
 }
 
 .tasklist li{

@@ -41,14 +41,14 @@ exports.tasklist = {
     },'inserttasklist' , true);
   },
   onUpdate: function(context){ // doesnt work
-    top.console.log("BELOW DOESNT WORK"); // TODO
+//    top.console.log("BELOW DOESNT WORK"); // TODO
 
     $('#innerdocbody').on('click', '.tasklist', function() {
       alert( "foo" );
     });
 
     $('.tasklist').click(function(){
-      top.console.log("I dont work");
+//      top.console.log("I dont work");
       context.ace.callWithAce(function(ace){
         ace.ace_doUpdatetasklist();
       },'updatetasklist' , true);
@@ -100,7 +100,7 @@ function doUpdatetasklist(){
 
 // Our heading attribute will result in a heaading:h1... :h6 class
 function aceAttribsToClasses(hook, context){
-  console.log("context value", context.value);
+  // console.log("context value", context.value);
   if(context.key == 'tasklist'){
     return ['tasklist', 'tasklist-done'];
   }

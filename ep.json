@@ -4,11 +4,15 @@
       "name": "tasklist",
       "client_hooks": {
         "aceEditorCSS": "ep_tasklist/static/js/tasklist",
-        "postAceInit": "ep_tasklist/static/js/tasklist"
+        "postAceInit": "ep_tasklist/static/js/tasklist",
+        "aceInitialized": "ep_tasklist/static/js/tasklist",
+        "collectContentPre": "ep_tasklist/static/js/shared"
       },
       "hooks": {
         "eejsBlock_scripts": "ep_tasklist/tasklist",
-        "eejsBlock_styles": "ep_tasklist/tasklist"
+        "eejsBlock_styles": "ep_tasklist/tasklist",
+        "collectContentPre": "ep_tasklist/static/js/shared",
+        "collectContentPost": "ep_tasklist/static/js/shared"
       }
     }
   ]

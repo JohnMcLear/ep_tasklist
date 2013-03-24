@@ -1,20 +1,22 @@
 ul.tasklist{
   list-style: none;
-  margin-left: 3em;
+  margin-left: 10px;
+  cursor: cursor;
+}
+
+ul.tasklist li, ul.tasklist-done li{
+  list-style: none;
+  background-image: url('/static/plugins/ep_tasklist/static/img/checkbox.png');
+  background-repeat: no-repeat;
+  padding-left: 1.5em;
   cursor: text;
 }
 
 .tasklist li{
-  background-image: url('/static/plugins/ep_tasklist/static/img/checkbox.png');
-  background-repeat: no-repeat;
-  background-position: 0 2px;
-  padding-left: 1.5em;
+  background-position: 0 3px;
 }
 
 .tasklist-done li{
-  background-image: url('/static/plugins/ep_tasklist/static/img/checkbox.png');
-  list-style: none;
-  margin-left: 3em;
-  color: #888;
-  cursor: text;
+  background-position: 0 -12px;
+  opacity: .6;
 }

@@ -3,6 +3,7 @@ var _ = require('ep_etherpad-lite/static/js/underscore');
 var tags = ['tasklist'];
 
 var collectContentPre = function(hook, context){
+top.console.log("uwuwua");
   var tname = context.tname;
   var state = context.state;
   var lineAttributes = state.lineAttributes
@@ -14,6 +15,7 @@ top.console.log("hi", tagIndex);
 };
 
 var collectContentPost = function(hook, context){
+top.console.log("uwuwua22");
   var tname = context.tname;
   var state = context.state;
   var lineAttributes = state.lineAttributes

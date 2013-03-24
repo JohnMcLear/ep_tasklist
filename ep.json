@@ -4,9 +4,12 @@
       "name": "tasklist",
       "client_hooks": {
         "aceEditorCSS": "ep_tasklist/static/js/tasklist",
+        "aceDomLineProcessLineAttributes": "ep_tasklist/static/js/tasklist",
         "postAceInit": "ep_tasklist/static/js/tasklist",
         "aceInitialized": "ep_tasklist/static/js/tasklist",
-        "collectContentPre": "ep_tasklist/static/js/shared"
+        "collectContentPre": "ep_tasklist/static/js/shared",
+        "aceAttribsToClasses": "ep_tasklist/static/js/tasklist",
+        "aceRegisterBlockElements": "ep_tasklist/static/js/tasklist"
       },
       "hooks": {
         "eejsBlock_scripts": "ep_tasklist/tasklist",

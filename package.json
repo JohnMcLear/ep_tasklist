@@ -1,0 +1,25 @@
+{
+  "name": "ep_tasklist",
+  "description": "Task list in Etherpad",
+  "version": "0.0.4",
+  "author": {
+    "name": "John McLear",
+    "email": "john@mclear.co.uk",
+    "url": "http://mclear.co.uk"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/johnyma22/ep_tasklist"
+  },
+  "contributors": [],
+  "dependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "_id": "ep_tasklist@0.1.1",
+  "readme": "ERROR: No README.md file found!",
+  "dist": {
+    "shasum": "927231aee0f19afa7a80fbfff8348401f15b0595"
+  },
+  "_from": "ep_tasklist"
+}

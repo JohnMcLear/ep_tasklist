@@ -62,10 +62,6 @@ function doInserttasklist(){
 
 // Update an existing task as completed / uncompleted
 function doUpdatetasklist(){
-  var rep = this.rep;
-  var documentAttributeManager = this.documentAttributeManager;
-  var firstLine, lastLine;
-
   if (!(rep.selStart && rep.selEnd)){ return; } // only continue if we have some caret position
 
   firstLine = rep.selStart[0];
@@ -91,10 +87,12 @@ function aceInitialized(hook, context){
 
 // Here we convert the class heading:h1 into a tag
 var aceDomLineProcessLineAttributes = function(name, context){
+  console.log("cls", context);
   var cls = context.cls;
   var domline = context.domline;
   if( (cls.indexOf("tasklist") !== -1) && (cls.indexOf("tasklist-done") === -1) ){ var type="tasklist"; }
-  if(cls.indexOf("tasklist-done") !== -1){ var type="tasklist-done";}
+  if( cls.indexOf("tasklist-done") !== -1){ var type="tasklist-done";}
+  console.log("type", type);
   var tagIndex = cls.indexOf(type);
   if (tagIndex !== undefined && type){
     var tag = tags[tagIndex];
@@ -106,6 +104,16 @@ var aceDomLineProcessLineAttributes = function(name, context){
     return [modifier];
   }
   return [];
+};
+
+/**
+ *
+ * This hook inserts a bunch of Javascripts and CSS links into the editor iframe. They are used for styling of and making the im$
+ */
+exports.aceInitInnerdocbodyHead = function(hook_name, args, cb) {
+  // FIXME: relative paths
+  args.iframeHTML.push('<script type="text/javascript" src="/static/plugins/ep_tasklist/static/js/ace_inner.js"></script>');
+  return cb();
 };
 
 // Export all hooks

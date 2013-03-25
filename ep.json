@@ -9,7 +9,8 @@
         "aceInitialized": "ep_tasklist/static/js/tasklist",
         "collectContentPre": "ep_tasklist/static/js/shared",
         "aceAttribsToClasses": "ep_tasklist/static/js/tasklist",
-        "aceRegisterBlockElements": "ep_tasklist/static/js/tasklist"
+        "aceRegisterBlockElements": "ep_tasklist/static/js/tasklist",
+        "aceInitInnerdocbodyHead": "ep_tasklist/static/js/tasklist"
       },
       "hooks": {
         "eejsBlock_scripts": "ep_tasklist/tasklist",

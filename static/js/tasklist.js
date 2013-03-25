@@ -19,7 +19,6 @@ var aceRegisterBlockElements = function(){return tags;}
 exports.postAceInit = function(hook, context){exports.tasklist.init(context);} // initiate the task list
 exports.aceEditorCSS = function(hook_name, cb){return ["/ep_tasklist/static/css/tasklist.css"];} // inner pad CSS
 exports.aceAttribsToClasses = function(hook, context){ 
-  console.log("context value", context.value);
   if(context.key == 'tasklist'){return [context.value];} 
 } // Our heading attribute will result in 'tasklist' or 'tasklist-done'
 
@@ -47,7 +46,7 @@ exports.tasklist = {
     });
 
     $('.tasklist').click(function(){
-//      top.console.log("I dont work");
+      top.console.log("I dont work");
       context.ace.callWithAce(function(ace){
         ace.ace_doUpdatetasklist();
       },'updatetasklist' , true);
@@ -78,7 +77,6 @@ function doInserttasklist(){
 
 // Update an existing task as completed / uncompleted
 function doUpdatetasklist(){
-console.log("updating");
   var rep = this.rep;
   var documentAttributeManager = this.documentAttributeManager;
   var firstLine, lastLine;
@@ -89,17 +87,12 @@ console.log("updating");
   lastLine = Math.max(firstLine, rep.selEnd[0] - ((rep.selEnd[1] === 0) ? 1 : 0));
 
   _(_.range(firstLine, lastLine + 1)).each(function(i){
-//    var istasklist = documentAttributeManager.getAttributeOnLine(i, 'tasklist');
-//    console.log(istasklist);
-//    if(istasklist === 'on'){ // if its already checked
-//console.log("checked");
-//      documentAttributeManager.removeAttributeOnLine(i, 'tasklist');
-///    }else{
-//console.log("checking");
-//      documentAttributeManager.removeAttributeOnLine(i, 'tasklist');
-console.log("i",i);
+    var istasklist = documentAttributeManager.getAttributeOnLine(i, 'tasklist');
+    if(istasklist === 'tasklist-done'){ // if its already checked
+      documentAttributeManager.setAttributeOnLine(i, 'tasklist', 'tasklist');
+    }else{
       documentAttributeManager.setAttributeOnLine(i, 'tasklist', 'tasklist-done');
-//    }
+    }
   });
 }
 
@@ -115,18 +108,14 @@ function aceInitialized(hook, context){
 var aceDomLineProcessLineAttributes = function(name, context){
   var cls = context.cls;
   var domline = context.domline;
-  console.log("cls", cls);
   var tagIndex = cls.indexOf("tasklist") || cls.indexOf("tasklist-done");
-  console.log("tagindex", tagIndex);
   if (tagIndex !== undefined && tagIndex >= 0){
     if ( cls.indexOf("tasklist-done") !== -1){ 
-console.log("YO DAWG");
       var type = "tasklist-done" } 
     else {
       var type = "tasklist";
     }
     var tag = tags[tagIndex];
-console.log("type", type);
     var modifier = {
       preHtml: '<ul class="'+type+'"><li>',
       postHtml: '</li></ul>',

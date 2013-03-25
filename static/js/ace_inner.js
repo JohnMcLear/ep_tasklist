@@ -4,9 +4,12 @@
 
 $(document).ready(function () {
   $("body").mousedown(function (event) {
-    console.log(parent.parent.pad);
-    var target = undefined;
-    if ($(event.target).filter(".tasklist").length > 0) { // if it's a tasklist item
+    parent.parent.doUpdateTaskList(this);
+
+//    context.ace.callWithAce(function(ace){
+//      ace.ace_doUpdatetasklist();
+ 
+/*    if ($(event.target).filter(".tasklist").length > 0) { // if it's a tasklist item
       var classList = $(event.target).attr('class').split(/\s+/);
       $.each( classList, function(index, item){
         if (item === 'tasklist-done') {
@@ -18,6 +21,11 @@ $(document).ready(function () {
         }
       });
     }
+*/
+//    });
+
+
+
   });
 });
 

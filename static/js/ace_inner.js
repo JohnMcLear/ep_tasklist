@@ -4,6 +4,7 @@
 
 $(document).ready(function () {
   $("body").mousedown(function (event) {
+    console.log(parent.parent.pad);
     var target = undefined;
     if ($(event.target).filter(".tasklist").length > 0) { // if it's a tasklist item
       var classList = $(event.target).attr('class').split(/\s+/);
@@ -19,3 +20,4 @@ $(document).ready(function () {
     }
   });
 });
+

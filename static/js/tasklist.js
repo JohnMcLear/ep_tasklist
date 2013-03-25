@@ -16,10 +16,15 @@ var $ = require('ep_etherpad-lite/static/js/rjquery').$;
 var _ = require('ep_etherpad-lite/static/js/underscore');
 var tags = ['tasklist', 'tasklist-done'];
 var aceRegisterBlockElements = function(){return tags;}
-exports.postAceInit = function(hook, context){exports.tasklist.init(context);} // initiate the task list
+exports.postAceInit = function(hook, context){exports.tasklist.init(context);
+ console.log("clontext", context);
+
+} // initiate the task list
 exports.aceEditorCSS = function(hook_name, cb){return ["/ep_tasklist/static/css/tasklist.css"];} // inner pad CSS
+
 exports.aceAttribsToClasses = function(hook, context){ 
-  if(context.key == 'tasklist'){return [context.value];} 
+  console.log("context.key", context.key);
+  if(context.key == 'tasklist' || context.key == 'tasklist-done'){return [context.value];} 
 } // Our heading attribute will result in 'tasklist' or 'tasklist-done'
 
 exports.tasklist = {

@@ -10,4 +10,3 @@ todo
 * Hitting the checklist button doesnt put the caret back in the browser
 * Indent then unindent removes the checklist
 * Removing the checklist of an indented object removes the indentation
-* Get better image for editbar

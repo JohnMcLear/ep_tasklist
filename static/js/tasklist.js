@@ -29,28 +29,13 @@ exports.tasklist = {
     $('#tasklist').click(function(){
       exports.tasklist.onClick(context);
     });
-    exports.tasklist.onUpdate(context); // Supposed to make the checklist UL items clickable but doesnt work
+    // exports.tasklist.onUpdate(context); // Supposed to make the checklist UL items clickable but doesnt work
   },
   onClick: function(context){ // On click the checklist editbar button
     context.ace.callWithAce(function(ace){
-//      ace.ace_doInserttasklist();
-      ace.ace_doUpdatetasklist();
-
+      ace.ace_doInserttasklist();
+//      ace.ace_doUpdatetasklist();
     },'inserttasklist' , true);
-  },
-  onUpdate: function(context){ // doesnt work
-//    top.console.log("BELOW DOESNT WORK"); // TODO
-
-    $('#innerdocbody').on('click', '.tasklist', function() {
-      alert( "foo" );
-    });
-
-    $('.tasklist').click(function(){
-      top.console.log("I dont work");
-      context.ace.callWithAce(function(ace){
-        ace.ace_doUpdatetasklist();
-      },'updatetasklist' , true);
-    });
   }
 }
 
@@ -108,17 +93,14 @@ function aceInitialized(hook, context){
 var aceDomLineProcessLineAttributes = function(name, context){
   var cls = context.cls;
   var domline = context.domline;
-  var tagIndex = cls.indexOf("tasklist") || cls.indexOf("tasklist-done");
-  if (tagIndex !== undefined && tagIndex >= 0){
-    if ( cls.indexOf("tasklist-done") !== -1){ 
-      var type = "tasklist-done" } 
-    else {
-      var type = "tasklist";
-    }
+  if( (cls.indexOf("tasklist") !== -1) && (cls.indexOf("tasklist-done") === -1) ){ var type="tasklist"; }
+  if(cls.indexOf("tasklist-done") !== -1){ var type="tasklist-done";}
+  var tagIndex = cls.indexOf(type);
+  if (tagIndex !== undefined && type){
     var tag = tags[tagIndex];
     var modifier = {
-      preHtml: '<ul class="'+type+'"><li>',
-      postHtml: '</li></ul>',
+      preHtml: '<li class="'+type+'"">',
+      postHtml: '</li>',
       processedMarker: true
     };
     return [modifier];

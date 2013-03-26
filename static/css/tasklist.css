@@ -1,15 +1,11 @@
-li.tasklist{
-  list-style: none;
-  cursor: pointer;
-}
-
-li.tasklist, li.tasklist-done{
+li.tasklist-not-done, li.tasklist-done{
   list-style: none;
   background-repeat: no-repeat;
   padding-left: 1.5em;
+  cursor: pointer;
 }
 
-.tasklist{
+.tasklist-not-done{
   background-image: url('/static/plugins/ep_tasklist/static/img/tasklist.png');
   background-position:2px 2px;
 }

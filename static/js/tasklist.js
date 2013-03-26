@@ -1,105 +1,100 @@
-/*
-* I borrow a lot of this from https://github.com/fourplusone/etherpad-plugins/tree/master/ep_headings
+/*** 
 *
-* TODO
-* Make it so clicking on a checkbox updates the class
-* When you write on a checkbox at the moment it loses it's styling
-* Make sure if you click the bullet button when on a checkbox things don't get too crazy
+* Most of the logic for task lists are done here
+*
 */
 
 if(typeof exports == 'undefined'){
   var exports = this['mymodule'] = {};
 }
 
-var _, $, jQuery;
-var $ = require('ep_etherpad-lite/static/js/rjquery').$;
 var _ = require('ep_etherpad-lite/static/js/underscore');
-var tags = ['tasklist', 'tasklist-done'];
-var aceRegisterBlockElements = function(){return tags;}
-exports.postAceInit = function(hook, context){exports.tasklist.init(context);
- //console.log("clontext", context);
-
-} // initiate the task list
-exports.aceEditorCSS = function(hook_name, cb){return ["/ep_tasklist/static/css/tasklist.css"];} // inner pad CSS
-
-exports.aceAttribsToClasses = function(hook, context){ 
-  //console.log("context.key", context.key);
-  if(context.key == 'tasklist' || context.key == 'tasklist-done'){return [context.value];} 
-} // Our heading attribute will result in 'tasklist' or 'tasklist-done'
+var tags = ['tasklist-not-done', 'tasklist-done'];
 
 exports.tasklist = {
+
+  /***
+  *
+  *  Add button to the editbar and bind a listener
+  *
+  ***/
+
   init: function(context){ // Write the button to the dom
-    var buttonHTML = '<li class="acl-write" id="tasklist" data-key="tasklist"><a class="grouped-middle" data-l10n-id="pad.toolbar.tasklist.title" title="Task list Checkbox"><span class="buttonicon buttonicon-tasklist"></span></a></li>';
+    var buttonHTML = '<li class="acl-write" id="tasklist"><a class="grouped-middle" data-l10n-id="pad.toolbar.tasklist.title" title="Task list Checkbox"><span class="buttonicon buttonicon-tasklist"></span></a></li>';
     $(buttonHTML).insertBefore('#indent');
     $('#tasklist').click(function(){ // apply attribtes when we click it
-      context.ace.callWithAce(function(ace){
+      context.ace.callWithAce(function(ace){ // TODO -- I need to be able to do callWithAce from ace_inner.js, that or I need to get the context that contains DocumentAttributeManager
         ace.ace_doInsertTaskList();
-        // ace.ace_doUpdateTaskList();
-      },'inserttasklist' , true);
+      }, 'tasklist', true); // TODO what's the second attribute do here?
     });
+  },
+
+
+  /***
+  *
+  *  Toggle if some text is or aren't a task list
+  *
+  ***/
+
+  doInsertTaskList: function(){
+    var rep = this.rep;
+    var documentAttributeManager = this.documentAttributeManager;
+    if (!(rep.selStart && rep.selEnd)){ return; } // only continue if we have some caret position
+    var firstLine = rep.selStart[0]; // Get the first line
+    var lastLine = Math.max(firstLine, rep.selEnd[0] - ((rep.selEnd[1] === 0) ? 1 : 0)); // Get the last line
+    _(_.range(firstLine, lastLine + 1)).each(function(i){ // For each line, either turn on or off task list
+      var istasklist = documentAttributeManager.getAttributeOnLine(i, 'tasklist-not-done');
+      if(!istasklist){ // if its already a tasklist item
+        documentAttributeManager.setAttributeOnLine(i, 'tasklist-not-done', 'tasklist-not-done'); // make the line a task list
+      }else{
+        documentAttributeManager.removeAttributeOnLine(i, 'tasklist-not-done'); // remove the task list from the line
+      }
+    });
+  },
+
+
+  /***
+  *
+  *  Toggle a task as done/not done -- called by ace_inner.js
+  *
+  ***/
+
+  doUpdateTaskList: function(){
+    var documentAttributeManager = this.documentAttributeManager;
+    console.log("dAM", documentAttributeManager);
+    var line = 1;
+    var istasklist = documentAttributeManager.getAttributeOnLine(line, 'tasklist-not-done'); // is it checked already?
+    if(istasklist === 'tasklist-done'){ // if its already checked
+      documentAttributeManager.setAttributeOnLine(line, 'tasklist-not-done', 'tasklist-not-done');
+    }else{
+      documentAttributeManager.setAttributeOnLine(line, 'tasklist-done', 'tasklist-done');
+    }
   }
 }
 
-// Insert an existing task
-function doInsertTaskList(){
-  var rep = this.rep;
-  var documentAttributeManager = this.documentAttributeManager;
 
-  var firstLine, lastLine;
+/***
+ * 
+ *  Once ace is initialized, we bind the functions to the context
+ * 
+ ***/
 
-  if (!(rep.selStart && rep.selEnd)){ return; } // only continue if we have some caret position
-
-  firstLine = rep.selStart[0];
-  lastLine = Math.max(firstLine, rep.selEnd[0] - ((rep.selEnd[1] === 0) ? 1 : 0));
-
-  _(_.range(firstLine, lastLine + 1)).each(function(i){
-    var istasklist = documentAttributeManager.getAttributeOnLine(i, 'tasklist');
-    if(!istasklist){ // if its already a tasklist item
-      documentAttributeManager.setAttributeOnLine(i, 'tasklist', 'tasklist');
-    }else{
-      documentAttributeManager.removeAttributeOnLine(i, 'tasklist');
-    }
-  });
-}
-
-// Update an existing task as completed / uncompleted
-function doUpdateTaskList(event){
-  console.log("jam", event);
-  console.log("jam2", $(event));
-console.log(this);
-  var documentAttributeManager = this.documentAttributeManager;
-//  if (!(rep.selStart && rep.selEnd)){ return; } // only continue if we have some caret position
-
-//  firstLine = rep.selStart[0];
-//  lastLine = Math.max(firstLine, rep.selEnd[0] - ((rep.selEnd[1] === 0) ? 1 : 0));
-  var line = 1;
-//  _(_.range(firstLine, lastLine + 1)).each(function(i){
-    var istasklist = documentAttributeManager.getAttributeOnLine(line, 'tasklist');
-    if(istasklist === 'tasklist-done'){ // if its already checked
-      documentAttributeManager.setAttributeOnLine(line, 'tasklist', 'tasklist');
-    }else{
-      documentAttributeManager.setAttributeOnLine(line, 'tasklist', 'tasklist-done');
-    }
-//  });
-}
-
-// Once ace is initialized, we set ace_doInsertTaskList and bind it to the context
 function aceInitialized(hook, context){
   var editorInfo = context.editorInfo;
-  editorInfo.ace_doInsertTaskList = _(doInsertTaskList).bind(context);
-  editorInfo.ace_doUpdateTaskList = _(doUpdateTaskList).bind(context);
+  editorInfo.ace_doInsertTaskList = _(exports.tasklist.doInsertTaskList).bind(context); // What does underscore do here?
+  editorInfo.ace_doUpdateTaskList = _(exports.tasklist.doUpdateTaskList).bind(context); // TODO
 }
 
 
-// Here we convert the class heading:h1 into a tag
+/***
+ * 
+ *  Add the Javascript to Ace inner head, this is for the onClick listener
+ * 
+ ***/
 var aceDomLineProcessLineAttributes = function(name, context){
-  //console.log("cls", context);
-  var cls = context.cls;
-  var domline = context.domline;
-  if( (cls.indexOf("tasklist") !== -1) && (cls.indexOf("tasklist-done") === -1) ){ var type="tasklist"; }
-  if( cls.indexOf("tasklist-done") !== -1){ var type="tasklist-done";}
-  //console.log("type", type);
-  var tagIndex = cls.indexOf(type);
+  if( context.cls.indexOf("tasklist-not-done") !== -1) { var type="tasklist-not-done"; }
+  if( context.cls.indexOf("tasklist-done") !== -1)     { var type="tasklist-done";}
+  var tagIndex = context.cls.indexOf(type);
   if (tagIndex !== undefined && type){
     var tag = tags[tagIndex];
     var modifier = {
@@ -107,24 +102,37 @@ var aceDomLineProcessLineAttributes = function(name, context){
       postHtml: '</li>',
       processedMarker: true
     };
-    return [modifier];
+    return [modifier]; // return the modifier
   }
-  return [];
+  return []; // or return nothing
 };
 
-/**
+
+/***
  *
- * This hook inserts a bunch of Javascripts and CSS links into the editor iframe. They are used for styling of and making the im$
- */
+ *  Add the Javascript to Ace inner head, this is for the onClick listener
+ * 
+ ***/
 exports.aceInitInnerdocbodyHead = function(hook_name, args, cb) {
-  // FIXME: relative paths
-  args.iframeHTML.push('<script type="text/javascript" src="/static/plugins/ep_tasklist/static/js/ace_inner.js"></script>');
+  args.iframeHTML.push('<script type="text/javascript" src="../static/plugins/ep_tasklist/static/js/ace_inner.js"></script>');
   return cb();
 };
 
-// Export all hooks
-exports.aceRegisterBlockElements = aceRegisterBlockElements;
+
+/***
+ *
+ * Turn attributes into classes
+ *
+ ***/
+exports.aceAttribsToClasses = function(hook, context){if(context.key == 'tasklist-not-done' || context.key == 'tasklist-done'){return [context.value];}}
+
+
+/***
+ * 
+ *  Export all the hooks
+ * 
+ ***/
 exports.aceInitialized = aceInitialized;
 exports.aceDomLineProcessLineAttributes = aceDomLineProcessLineAttributes;
-exports.doInsertTaskList = doInsertTaskList;
-exports.doUpdateTaskList = doUpdateTaskList;
+exports.aceEditorCSS = function(hook_name, cb){return ["/ep_tasklist/static/css/tasklist.css"];} // inner pad CSS
+exports.postAceInit = function(hook, context){exports.tasklist.init(context);}

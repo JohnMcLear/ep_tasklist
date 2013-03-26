@@ -1,14 +1,15 @@
 var collectContentPre = function(hook, context){
   var tname = context.cls;
-  var state = context.state;
+  var state = context.state; 
   var lineAttributes = state.lineAttributes
 
-  if( (tname.indexOf("tasklist") !== -1) && (tname.indexOf("tasklist-done") === -1)){
-    var tagIndex = tname.indexOf("tasklist");
-    lineAttributes['tasklist'] = tags[tagIndex];
+  var tagIndex = tname.indexOf("tasklist-not-done");
+  if(tagIndex !== -1){
+    lineAttributes['tasklist-not-done'] = tags[tagIndex];
   }
-  else if( tname.indexOf("tasklist-done") !== -1){
-    var tagIndex = tname.indexOf("tasklist-done");
+
+  var tagIndex = tname.indexOf("tasklist-done");
+  if(tagIndex !== -1){
     lineAttributes['tasklist-done'] = tags[tagIndex];
   }
 };
@@ -17,9 +18,15 @@ var collectContentPost = function(hook, context){
   var tname = context.tname;
   var state = context.state;
   var lineAttributes = state.lineAttributes
-  var tagIndex = _.indexOf(tags, tname);
+
+  var tagIndex = tname.indexOf("tasklist-not-done");
   if(tagIndex >= 0){
-    delete lineAttributes['tasklist'];
+    delete lineAttributes['tasklist-not-done'];
+  }
+
+  var tagIndex = tname.indexOf("tasklist-done");       
+  if(tagIndex >= 0){
+    delete lineAttributes['tasklist-done'];
   }
 };
 

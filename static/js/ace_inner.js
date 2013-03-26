@@ -4,8 +4,7 @@
 
 $(document).ready(function () {
   $("body").mousedown(function (event) {
-    parent.parent.doUpdateTaskList(this);
-
+    parent.parent.exports.tasklist.doUpdateTaskList(1);
 //    context.ace.callWithAce(function(ace){
 //      ace.ace_doUpdatetasklist();
  

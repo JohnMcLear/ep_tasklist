@@ -29,10 +29,7 @@ exports.tasklist = {
     });
     context.ace.callWithAce(function(ace){
       var doc = ace.ace_getDocument();
-      console.log(doc);
-//      $(doc).find('#innerdocbody').on("click", _(this.doUpdateTaskList).bind(ace));
-      $(doc).find('#innerdocbody').on("click", function(){alert("pow");});
-
+      $(doc).find('#innerdocbody').on("click", _(exports.tasklist.doUpdateTaskList).bind(ace));
     });
   },
 
@@ -66,16 +63,22 @@ exports.tasklist = {
   *
   ***/
 
-  doUpdateTaskList: function(){
-    var documentAttributeManager = this.documentAttributeManager;
-    console.log("dAM", documentAttributeManager);
-    var line = 1;
-    var istasklist = documentAttributeManager.getAttributeOnLine(line, 'tasklist-not-done'); // is it checked already?
-    if(istasklist === 'tasklist-done'){ // if its already checked
-      documentAttributeManager.setAttributeOnLine(line, 'tasklist-not-done', 'tasklist-not-done');
-    }else{
-      documentAttributeManager.setAttributeOnLine(line, 'tasklist-done', 'tasklist-done');
-    }
+  doUpdateTaskList: function(event){
+    var rep = this.ace_getRep();
+    console.log(rep);
+    console.log(this);
+    var caretLine = this.ace_caretLine();
+    console.log(caretLine); // Note that this is wrong :( It gets the line before, mouseup doesnt help!
+///    this.ace_setAttributeOnSelection("tasklist-not-done", "tasklist-not-done"); // this doesnt work :(
+//    var documentAttributeManager = this.documentAttributeManager;
+//    console.log("dAM", documentAttributeManager);
+//    var line = 1;
+//    var istasklist = documentAttributeManager.getAttributeOnLine(line, 'tasklist-not-done'); // is it checked already?
+//    if(istasklist === 'tasklist-done'){ // if its already checked
+//      documentAttributeManager.setAttributeOnLine(line, 'tasklist-not-done', 'tasklist-not-done');
+//    }else{
+//      documentAttributeManager.setAttributeOnLine(line, 'tasklist-done', 'tasklist-done');
+//    }
   }
 }
 
@@ -89,7 +92,7 @@ exports.tasklist = {
 function aceInitialized(hook, context){
   var editorInfo = context.editorInfo;
   editorInfo.ace_doInsertTaskList = _(exports.tasklist.doInsertTaskList).bind(context); // What does underscore do here?
-  editorInfo.ace_doUpdateTaskList = _(exports.tasklist.doUpdateTaskList).bind(context); // TODO
+//  editorInfo.ace_doUpdateTaskList = _(exports.tasklist.doUpdateTaskList).bind(context); // TODO
 }
 
 
@@ -112,17 +115,6 @@ var aceDomLineProcessLineAttributes = function(name, context){
     return [modifier]; // return the modifier
   }
   return []; // or return nothing
-};
-
-
-/***
- *
- *  Add the Javascript to Ace inner head, this is for the onClick listener
- * 
- ***/
-exports.aceInitInnerdocbodyHead = function(hook_name, args, cb) {
-  args.iframeHTML.push('<script type="text/javascript" src="../static/plugins/ep_tasklist/static/js/ace_inner.js"></script>');
-  return cb();
 };
 
 

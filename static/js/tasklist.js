@@ -65,8 +65,13 @@ exports.tasklist = {
 
   doUpdateTaskList: function(event){
     var rep = this.ace_getRep();
-    console.log(rep);
-    console.log(this);
+    console.log("event", event);
+    console.log("rep", rep);
+    console.log("this", this);
+    this.ace_doIndentOutdent(false);
+    var checklist = event.target;
+    console.log("checklist item", checklist);
+//    $(checklist).addClass("tasklist-done");
     var caretLine = this.ace_caretLine();
     console.log(caretLine); // Note that this is wrong :( It gets the line before, mouseup doesnt help!
 ///    this.ace_setAttributeOnSelection("tasklist-not-done", "tasklist-not-done"); // this doesnt work :(

@@ -23,9 +23,16 @@ exports.tasklist = {
     var buttonHTML = '<li class="acl-write" id="tasklist"><a class="grouped-middle" data-l10n-id="pad.toolbar.tasklist.title" title="Task list Checkbox"><span class="buttonicon buttonicon-tasklist"></span></a></li>';
     $(buttonHTML).insertBefore('#indent');
     $('#tasklist').click(function(){ // apply attribtes when we click it
-      context.ace.callWithAce(function(ace){ // TODO -- I need to be able to do callWithAce from ace_inner.js, that or I need to get the context that contains DocumentAttributeManager
+      context.ace.callWithAce(function(ace){
         ace.ace_doInsertTaskList();
       }, 'tasklist', true); // TODO what's the second attribute do here?
+    });
+    context.ace.callWithAce(function(ace){
+      var doc = ace.ace_getDocument();
+      console.log(doc);
+//      $(doc).find('#innerdocbody').on("click", _(this.doUpdateTaskList).bind(ace));
+      $(doc).find('#innerdocbody').on("click", function(){alert("pow");});
+
     });
   },
 
@@ -135,4 +142,6 @@ exports.aceAttribsToClasses = function(hook, context){if(context.key == 'tasklis
 exports.aceInitialized = aceInitialized;
 exports.aceDomLineProcessLineAttributes = aceDomLineProcessLineAttributes;
 exports.aceEditorCSS = function(hook_name, cb){return ["/ep_tasklist/static/css/tasklist.css"];} // inner pad CSS
-exports.postAceInit = function(hook, context){exports.tasklist.init(context);}
+exports.postAceInit = function(hook, context){exports.tasklist.init(context);
+
+}

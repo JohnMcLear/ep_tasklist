@@ -10,6 +10,7 @@ if(typeof exports == 'undefined'){
 
 var _ = require('ep_etherpad-lite/static/js/underscore');
 var tags = ['tasklist-not-done', 'tasklist-done'];
+var padEditor;
 
 exports.tasklist = {
 
@@ -22,15 +23,17 @@ exports.tasklist = {
   init: function(context){ // Write the button to the dom
     var buttonHTML = '<li class="acl-write" id="tasklist"><a class="grouped-middle" data-l10n-id="pad.toolbar.tasklist.title" title="Task list Checkbox"><span class="buttonicon buttonicon-tasklist"></span></a></li>';
     $(buttonHTML).insertBefore('#indent');
-    $('#tasklist').click(function(){ // apply attribtes when we click it
-      context.ace.callWithAce(function(ace){
+    $('#tasklist').click(function(){ // apply attribtes when we click the editbar button
+
+      context.ace.callWithAce(function(ace){ // call the function to apply the attribute inside ACE
         ace.ace_doInsertTaskList();
       }, 'tasklist', true); // TODO what's the second attribute do here?
+
     });
     context.ace.callWithAce(function(ace){
       var doc = ace.ace_getDocument();
       $(doc).find('#innerdocbody').on("click", _(exports.tasklist.doUpdateTaskList).bind(ace));
-    });
+    }, 'tasklist', true);
   },
 
 
@@ -63,27 +66,37 @@ exports.tasklist = {
   *
   ***/
 
-  doUpdateTaskList: function(event){
-    var rep = this.ace_getRep();
-    console.log("event", event);
-    console.log("rep", rep);
-    console.log("this", this);
-    this.ace_doIndentOutdent(false);
-    var checklist = event.target;
-    console.log("checklist item", checklist);
-//    $(checklist).addClass("tasklist-done");
-    var caretLine = this.ace_caretLine();
-    console.log(caretLine); // Note that this is wrong :( It gets the line before, mouseup doesnt help!
-///    this.ace_setAttributeOnSelection("tasklist-not-done", "tasklist-not-done"); // this doesnt work :(
-//    var documentAttributeManager = this.documentAttributeManager;
-//    console.log("dAM", documentAttributeManager);
-//    var line = 1;
-//    var istasklist = documentAttributeManager.getAttributeOnLine(line, 'tasklist-not-done'); // is it checked already?
-//    if(istasklist === 'tasklist-done'){ // if its already checked
-//      documentAttributeManager.setAttributeOnLine(line, 'tasklist-not-done', 'tasklist-not-done');
-//    }else{
-//      documentAttributeManager.setAttributeOnLine(line, 'tasklist-done', 'tasklist-done');
-//    }
+  doToggleTaskListItem: function(){
+    var rep = this.rep;
+    var documentAttributeManager = this.documentAttributeManager;
+    var isDone = documentAttributeManager.getAttributeOnLine(rep.selEnd[0], 'tasklist-done');
+    if(isDone){
+      documentAttributeManager.removeAttributeOnLine(rep.selEnd[0], 'tasklist-done'); // remove the task list from the line
+      documentAttributeManager.setAttributeOnLine(rep.selEnd[0], 'tasklist-not-done', 'tasklist-not-done'); // make it undone
+    }else{
+      documentAttributeManager.removeAttributeOnLine(rep.selEnd[0], 'tasklist-not-done'); // remove the task list from the line
+      documentAttributeManager.setAttributeOnLine(rep.selEnd[0], 'tasklist-done', 'tasklist-done'); // make it done
+    }
+
+  },
+
+
+  /***
+  *
+  *  Is it a task list item and has the checkbox been clicked?
+  *
+  ***/
+
+  doUpdateTaskList: function(event){ // This is in the wrong context to access doc attr manager
+    var ace = this;
+    var target = event.target;
+    var isTaskList = ($(target).hasClass("tasklist-not-done") || $(target).hasClass("tasklist-done"));
+    var isCheckbox = (event.offsetX < 14 && event.offsetY < 14);
+    if(!isTaskList || !isCheckbox){ return; } // Dont continue if we're not clicking a checkbox of a tasklist
+
+    padEditor.callWithAce(function(ace){ // call the function to apply the attribute inside ACE
+      ace.ace_doToggleTaskListItem();
+    }, 'tasklist', true); // TODO what's the second attribute do here?
   }
 }
 
@@ -97,7 +110,8 @@ exports.tasklist = {
 function aceInitialized(hook, context){
   var editorInfo = context.editorInfo;
   editorInfo.ace_doInsertTaskList = _(exports.tasklist.doInsertTaskList).bind(context); // What does underscore do here?
-//  editorInfo.ace_doUpdateTaskList = _(exports.tasklist.doUpdateTaskList).bind(context); // TODO
+  editorInfo.ace_doToggleTaskListItem = _(exports.tasklist.doToggleTaskListItem).bind(context); // TODO
+  padEditor = context.editorInfo.editor;
 }
 
 

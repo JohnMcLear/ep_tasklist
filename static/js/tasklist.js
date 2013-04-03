@@ -91,9 +91,9 @@ exports.tasklist = {
     var ace = this;
     var target = event.target;
     var isTaskList = ($(target).hasClass("tasklist-not-done") || $(target).hasClass("tasklist-done"));
-    var isCheckbox = (event.offsetX < 14 && event.offsetY < 14);
+    var targetRight = event.target.offsetLeft + 14; // The right hand side of the checkbox -- remember the checkbox can be indented
+    var isCheckbox = (event.pageX < targetRight); // was the click to the left of the checkbox
     if(!isTaskList || !isCheckbox){ return; } // Dont continue if we're not clicking a checkbox of a tasklist
-
     padEditor.callWithAce(function(ace){ // call the function to apply the attribute inside ACE
       ace.ace_doToggleTaskListItem();
     }, 'tasklist', true); // TODO what's the second attribute do here?

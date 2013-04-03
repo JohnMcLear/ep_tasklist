@@ -4,7 +4,6 @@ Tasks list in Etherpad
 
 todo
 ====
-* Clicking the checklist item still doesnt toggle state, a function exists that does it but it's not available
 * Doing tab then shift tab destroys the checklist item
 * Hitting enter at the end of a line with a checklist item doesnt continue the checklist
 * Hitting the checklist button doesnt put the caret back in the browser

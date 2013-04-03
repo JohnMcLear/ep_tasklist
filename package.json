@@ -9,17 +9,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/johnyma22/ep_tasklist"
+    "url": "https://github.com/johnmclear/ep_tasklist"
   },
   "contributors": [],
   "dependencies": {},
   "engines": {
     "node": "*"
-  },
-  "_id": "ep_tasklist@0.1.1",
-  "readme": "ERROR: No README.md file found!",
-  "dist": {
-    "shasum": "927231aee0f19afa7a80fbfff8348401f15b0595"
-  },
-  "_from": "ep_tasklist"
+  }
 }

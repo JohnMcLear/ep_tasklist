@@ -8,7 +8,7 @@ if(typeof exports == 'undefined'){
   var exports = this['mymodule'] = {};
 }
 
-var _ = require('ep_etherpad-lite/static/js/underscore');
+var underscore = require('ep_etherpad-lite/static/js/underscore');
 var tags = ['tasklist-not-done', 'tasklist-done'];
 var padEditor;
 
@@ -32,7 +32,7 @@ exports.tasklist = {
     });
     context.ace.callWithAce(function(ace){
       var doc = ace.ace_getDocument();
-      $(doc).find('#innerdocbody').on("click", _(exports.tasklist.doUpdateTaskList).bind(ace));
+      $(doc).find('#innerdocbody').on("click", underscore(exports.tasklist.doUpdateTaskList).bind(ace));
     }, 'tasklist', true);
   },
 
@@ -49,7 +49,7 @@ exports.tasklist = {
     if (!(rep.selStart && rep.selEnd)){ return; } // only continue if we have some caret position
     var firstLine = rep.selStart[0]; // Get the first line
     var lastLine = Math.max(firstLine, rep.selEnd[0] - ((rep.selEnd[1] === 0) ? 1 : 0)); // Get the last line
-    _(_.range(firstLine, lastLine + 1)).each(function(i){ // For each line, either turn on or off task list
+    underscore(underscore.range(firstLine, lastLine + 1)).each(function(i){ // For each line, either turn on or off task list
       var istasklist = documentAttributeManager.getAttributeOnLine(i, 'tasklist-not-done');
       if(!istasklist){ // if its already a tasklist item
         documentAttributeManager.setAttributeOnLine(i, 'tasklist-not-done', 'tasklist-not-done'); // make the line a task list
@@ -109,8 +109,8 @@ exports.tasklist = {
 
 function aceInitialized(hook, context){
   var editorInfo = context.editorInfo;
-  editorInfo.ace_doInsertTaskList = _(exports.tasklist.doInsertTaskList).bind(context); // What does underscore do here?
-  editorInfo.ace_doToggleTaskListItem = _(exports.tasklist.doToggleTaskListItem).bind(context); // TODO
+  editorInfo.ace_doInsertTaskList = underscore(exports.tasklist.doInsertTaskList).bind(context); // What does underscore do here?
+  editorInfo.ace_doToggleTaskListItem = underscore(exports.tasklist.doToggleTaskListItem).bind(context); // TODO
   padEditor = context.editorInfo.editor;
 }
 

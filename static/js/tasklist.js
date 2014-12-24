@@ -9,6 +9,7 @@ if(typeof exports == 'undefined'){
 }
 
 var underscore = require('ep_etherpad-lite/static/js/underscore');
+var padeditor = require('ep_etherpad-lite/static/js/pad_editor').padeditor;
 var tags = ['tasklist-not-done', 'tasklist-done'];
 var padEditor;
 
@@ -28,6 +29,7 @@ exports.tasklist = {
       context.ace.callWithAce(function(ace){ // call the function to apply the attribute inside ACE
         ace.ace_doInsertTaskList();
       }, 'tasklist', true); // TODO what's the second attribute do here?
+      padeditor.ace.focus();
 
     });
     context.ace.callWithAce(function(ace){

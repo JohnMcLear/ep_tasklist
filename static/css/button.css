@@ -1,4 +1,5 @@
 .buttonicon-tasklist{
   background-image: url('/static/plugins/ep_tasklist/static/img/tasklist-done.png');
-  background-position: 1px 2px;
+  background-repeat:no-repeat;
+  background-size:cover;
 } 

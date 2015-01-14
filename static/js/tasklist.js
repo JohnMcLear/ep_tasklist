@@ -68,16 +68,16 @@ exports.tasklist = {
   *
   ***/
 
-  doToggleTaskListItem: function(){
+  doToggleTaskListItem: function(lineNumber){
     var rep = this.rep;
     var documentAttributeManager = this.documentAttributeManager;
-    var isDone = documentAttributeManager.getAttributeOnLine(rep.selEnd[0], 'tasklist-done');
+    var isDone = documentAttributeManager.getAttributeOnLine(lineNumber, 'tasklist-done');
     if(isDone){
-      documentAttributeManager.removeAttributeOnLine(rep.selEnd[0], 'tasklist-done'); // remove the task list from the line
-      documentAttributeManager.setAttributeOnLine(rep.selEnd[0], 'tasklist-not-done', 'tasklist-not-done'); // make it undone
+      documentAttributeManager.removeAttributeOnLine(lineNumber, 'tasklist-done'); // remove the task list from the line
+      documentAttributeManager.setAttributeOnLine(lineNumber, 'tasklist-not-done', 'tasklist-not-done'); // make it undone
     }else{
-      documentAttributeManager.removeAttributeOnLine(rep.selEnd[0], 'tasklist-not-done'); // remove the task list from the line
-      documentAttributeManager.setAttributeOnLine(rep.selEnd[0], 'tasklist-done', 'tasklist-done'); // make it done
+      documentAttributeManager.removeAttributeOnLine(lineNumber, 'tasklist-not-done'); // remove the task list from the line
+      documentAttributeManager.setAttributeOnLine(lineNumber, 'tasklist-done', 'tasklist-done'); // make it done
     }
 
   },
@@ -93,11 +93,13 @@ exports.tasklist = {
     var ace = this;
     var target = event.target;
     var isTaskList = ($(target).hasClass("tasklist-not-done") || $(target).hasClass("tasklist-done"));
+    var parent = $(target).parent();
+    var lineNumber = parent.prevAll().length;
     var targetRight = event.target.offsetLeft + 14; // The right hand side of the checkbox -- remember the checkbox can be indented
     var isCheckbox = (event.pageX < targetRight); // was the click to the left of the checkbox
     if(!isTaskList || !isCheckbox){ return; } // Dont continue if we're not clicking a checkbox of a tasklist
     padEditor.callWithAce(function(ace){ // call the function to apply the attribute inside ACE
-      ace.ace_doToggleTaskListItem();
+      ace.ace_doToggleTaskListItem(lineNumber);
     }, 'tasklist', true); // TODO what's the second attribute do here?
   }
 }

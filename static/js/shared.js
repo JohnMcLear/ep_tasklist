@@ -5,15 +5,13 @@ var collectContentPre = function(hook, context){
   var lineAttributes = state.lineAttributes
 
   var tagIndex = cls.indexOf("tasklist-not-done");
-  // console.log("tI1", tagIndex);
-  if(tagIndex !== -1){
+  if(tagIndex === 0){
     lineAttributes['tasklist-not-done'] = tags[tagIndex];
   }
 
   var tagIndex = cls.indexOf("tasklist-done");
-  // console.log("tI2", tagIndex);
   if(tagIndex !== -1){
-    lineAttributes['tasklist-done'] = tags[tagIndex];
+    lineAttributes['tasklist-done'] = 'tasklist-done';
   }
 
   if(tname === "div" || tname === "p"){

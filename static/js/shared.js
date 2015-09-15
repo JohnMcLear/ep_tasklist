@@ -4,21 +4,22 @@ var collectContentPre = function(hook, context){
   var state = context.state; 
   var lineAttributes = state.lineAttributes
 
-  var tagIndex = cls.indexOf("tasklist-not-done");
-  if(tagIndex === 0){
-    lineAttributes['tasklist-not-done'] = tags[tagIndex];
-  }
+  if(cls !== null) {
+    var tagIndex = cls.indexOf("tasklist-not-done");
+    if(tagIndex === 0){
+      lineAttributes['tasklist-not-done'] = tags[tagIndex];
+    }
 
-  var tagIndex = cls.indexOf("tasklist-done");
-  if(tagIndex !== -1){
-    lineAttributes['tasklist-done'] = 'tasklist-done';
-  }
+    var tagIndex = cls.indexOf("tasklist-done");
+    if(tagIndex !== -1){
+      lineAttributes['tasklist-done'] = 'tasklist-done';
+    }
 
-  if(tname === "div" || tname === "p"){
-    delete lineAttributes['tasklist-done'];
-    delete lineAttributes['tasklist-not-done'];
+    if(tname === "div" || tname === "p"){
+      delete lineAttributes['tasklist-done'];
+      delete lineAttributes['tasklist-not-done'];
+    }
   }
-
 };
 
 var collectContentPost = function(hook, context){
